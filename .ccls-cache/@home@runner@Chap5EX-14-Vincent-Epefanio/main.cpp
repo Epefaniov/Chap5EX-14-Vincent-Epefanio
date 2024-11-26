@@ -25,39 +25,29 @@
 
 */
 
-
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <limits> // For numeric_limits
 
 using namespace std;
 
 int main() {
-    int numStudents;
+    ifstream inputFile("LineUp.txt");
 
-    // Input and validation for number of students
-    cout << "Enter the number of students in the class (between 1 and 25): ";
-    while (true) {
-        cin >> numStudents;
-        if (numStudents >= 1 && numStudents <= 25) {
-            break;
-        } else {
-            cout << "Number of students must be between 1 and 25. Please enter again: ";
-            cin.clear(); // Clear the error flag
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignore incorrect input
-        }
+    if (!inputFile) {
+        cout << "Error opening file!" << endl;
+        return 1;
     }
 
     string studentName;
-    string firstName, lastName;
     string frontStudent, backStudent;
+    int numStudents = 0;
 
-    cout << "Enter the names of the students:\n";
-    for (int i = 0; i < numStudents; ++i) {
-        cout << "Student " << i + 1 << ": ";
-        cin >> studentName;
-
-        if (i == 0) {
+    // Read names from the file until EOF
+    while (getline(inputFile, studentName)) {
+        numStudents++;
+        if (numStudents == 1) {
             frontStudent = studentName;
             backStudent = studentName;
         } else {
@@ -70,8 +60,16 @@ int main() {
         }
     }
 
-    cout << "The student at the front of the line is: " << frontStudent << endl;
-    cout << "The student at the end of the line is: " << backStudent << endl;
+    inputFile.close();
+
+    if (numStudents == 0) {
+        cout << "No students found in the file." << endl;
+    } else {
+        cout << "The student at the front of the line is: " << frontStudent << endl;
+        cout << "The student at the end of the line is: " << backStudent << endl;
+    }
 
     return 0;
 }
+
+
